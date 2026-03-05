@@ -1,6 +1,6 @@
 {
   "name": "@cryptoapis-io/mcp-signer",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "MCP server for local transaction signing across EVM, UTXO, Tron, and XRP blockchains — no API calls required",
   "license": "MIT",
   "author": "Crypto APIs, Inc.",
@@ -8,6 +8,7 @@
     "type": "git",
     "url": "https://github.com/CryptoAPIs-io/cryptoapis-mcp-signer.git"
   },
+  "mcpName": "io.github.CryptoAPIs-io/mcp-signer",
   "keywords": [
     "mcp",
     "cryptoapis",
@@ -27,7 +28,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "server.json"
   ],
   "bin": {
     "cryptoapis-mcp-signer": "dist/cli.js"
