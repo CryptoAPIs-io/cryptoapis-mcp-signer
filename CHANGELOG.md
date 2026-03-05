@@ -1,5 +1,11 @@
 # @cryptoapis-io/mcp-signer
 
+## 0.2.3
+
+### Patch Changes
+
+- Shorten package descriptions to meet MCP Registry 100-char limit
+
 ## 0.2.2
 
 ### Patch Changes

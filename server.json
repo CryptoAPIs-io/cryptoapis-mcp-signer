@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.CryptoAPIs-io/mcp-signer",
-  "description": "MCP server for local transaction signing across EVM, UTXO, Tron, and XRP blockchains — no API calls required",
+  "description": "MCP server for local transaction signing on EVM, UTXO, Tron, and XRP — no API calls needed",
   "repository": {
     "url": "https://github.com/CryptoAPIs-io/cryptoapis-mcp-signer",
     "source": "github"
   },
-  "version": "0.2.2",
+  "version": "0.2.3",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@cryptoapis-io/mcp-signer",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "transport": {
         "type": "stdio"
       }
