@@ -72,7 +72,7 @@ export async function evmSignFromDetails(input: EvmSignFromDetailsInput): Promis
 export const evmSignTool: McpSignerToolDef<typeof EvmSignToolSchema> = {
     name: "evm_sign",
     description:
-        "Sign an EVM transaction. Two actions: (1) sign-unsigned-hex: sign pre-built unsigned tx hex; (2) sign-from-details: build and sign from fields (blockchain, network, toAddress, value, gas, fee, etc.). Network names (e.g. ethereum+sepolia, polygon+mainnet) are mapped to chainId internally. Private key is always passed as parameter (never from env).",
+        "Sign an EVM transaction. Two actions: (1) sign-unsigned-hex: sign pre-built unsigned tx hex; (2) sign-from-details: build and sign from fields (blockchain, network, toAddress, value, gas, fee, etc.). Network names (e.g. ethereum+sepolia, polygon+mainnet) are mapped to chainId internally. Private key is always passed as parameter (never from env). SECURITY: Private keys may be logged by MCP clients or stored in conversation history — use only in trusted local environments.",
     inputSchema: EvmSignToolSchema,
     handler: async (input: EvmSignToolInput) => {
         const result =

@@ -59,7 +59,7 @@ function tronSignUnsignedHex(input: TronSignUnsignedHexInput): { signedTransacti
 export const tronSignTool: McpSignerToolDef<typeof TronSignToolSchema> = {
     name: "tron_sign",
     description:
-        "Sign a Tron transaction (no TronWeb): Node crypto (sha256) + elliptic (secp256k1) + minimal protobuf encode/decode. Two actions: (1) sign-from-details: sign from transaction object (must include raw_data_hex); (2) sign-unsigned-hex: sign from raw unsigned tx hex. Returns signedTransactionHex. Private key is passed as parameter (never from env).",
+        "Sign a Tron transaction (no TronWeb): Node crypto (sha256) + elliptic (secp256k1) + minimal protobuf encode/decode. Two actions: (1) sign-from-details: sign from transaction object (must include raw_data_hex); (2) sign-unsigned-hex: sign from raw unsigned tx hex. Returns signedTransactionHex. Private key is passed as parameter (never from env). SECURITY: Private keys may be logged by MCP clients or stored in conversation history — use only in trusted local environments.",
     inputSchema: TronSignToolSchema,
     handler: async (input: TronSignToolInput) => {
         const result =

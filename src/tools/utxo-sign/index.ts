@@ -129,7 +129,7 @@ function runUnsignedHex(input: UtxoSignUnsignedHexInput): { signedTransactionHex
 export const utxoSignTool: McpSignerToolDef<typeof UtxoSignToolSchema> = {
     name: "utxo_sign",
     description:
-        "Sign a UTXO transaction (bitcoin, bitcoin-cash, litecoin, dogecoin, dash, zcash). Two actions: (1) sign-from-details: sign from prepared transaction object (e.g. HD wallet prepare-transaction); (2) sign-unsigned-hex: sign from raw unsigned tx hex (provide inputs metadata: script, satoshis per input). Private key is passed as parameter (never from env).",
+        "Sign a UTXO transaction (bitcoin, bitcoin-cash, litecoin, dogecoin, dash, zcash). Two actions: (1) sign-from-details: sign from prepared transaction object (e.g. HD wallet prepare-transaction); (2) sign-unsigned-hex: sign from raw unsigned tx hex (provide inputs metadata: script, satoshis per input). Private key is passed as parameter (never from env). SECURITY: Private keys may be logged by MCP clients or stored in conversation history — use only in trusted local environments.",
     inputSchema: UtxoSignToolSchema,
     handler: async (input: UtxoSignToolInput) => {
         const result =
