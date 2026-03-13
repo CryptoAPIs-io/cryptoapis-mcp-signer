@@ -1,6 +1,6 @@
 {
   "name": "@cryptoapis-io/mcp-signer",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "MCP server for local transaction signing on EVM, UTXO, Tron, and XRP — no API calls needed",
   "license": "MIT",
   "author": "Crypto APIs, Inc.",
@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
-    "rimraf": "^6.0.1",
+    "rimraf": "^6.1.3",
     "tsx": "^4.21.0",
     "typescript": "^5.5.4"
   }
