@@ -68,6 +68,7 @@ Sign an EVM transaction (Ethereum, Ethereum Classic, BSC, Polygon, Avalanche (C-
 |--------|-------------|
 | `sign-from-details` | Sign from structured transaction fields (to, value, gasLimit, etc.) |
 | `sign-unsigned-hex` | Sign a pre-built unsigned transaction hex |
+| `sign-typed-data` | Sign an EIP-712 typed-data message (the x402 gasless path — e.g. the EIP-3009 `TransferWithAuthorization` from the x402 buyer `/authorize`). Returns `{ signature }`, not a tx. |
 
 ### `utxo_sign`
 
@@ -96,7 +97,25 @@ Sign an XRP transaction.
 | `sign-from-details` | Sign from structured XRP transaction fields |
 | `sign-unsigned-hex` | Sign a pre-built unsigned transaction hex |
 
-All tools return `signedTransactionHex` — ready to broadcast with `@cryptoapis-io/mcp-broadcast`.
+### `kaspa_sign`
+
+Sign a Kaspa transaction using schnorr (BIP340) via `kaspa-wasm`. Mainnet only.
+
+| Action | Description |
+|--------|-------------|
+| `sign-from-details` | Sign a prepared Kaspa transaction (from the prepare-transaction API) |
+
+### `svm_sign`
+
+Partial-sign a Solana (SVM) x402 payment transaction — the buyer's source-authority signature only
+(the facilitator's feePayer slot stays unsigned, signed at settle).
+
+| Action | Description |
+|--------|-------------|
+| `partial-sign` | Deserialize the base64 unsigned TransferChecked tx from the x402 buyer `/authorize` (scheme `svm-transaction`), add the buyer signature, re-serialize to base64. Returns `{ transaction }`. |
+
+Most tools return `signedTransactionHex` — ready to broadcast with `@cryptoapis-io/mcp-broadcast`. The
+x402 paths return `{ signature }` (EVM typed-data) or `{ transaction }` (SVM) instead.
 
 ## Dependencies
 

@@ -30,12 +30,32 @@ export const EvmSignFromDetailsSchema = z.object({
     type: z.union([z.literal(0), z.literal(2)]).optional().describe("0 = legacy, 2 = EIP-1559 (default 0)"),
 });
 
+/**
+ * Sign an EIP-712 typed-data message (NOT a transaction) — the x402 gasless path.
+ * The buyer service's `/authorize` returns `{ domain, types, primaryType, message }`
+ * for the `eip712` scheme (an EIP-3009 `TransferWithAuthorization`); pass it here
+ * verbatim and this signs it, producing the 65-byte signature the facilitator's
+ * `/verify` recovers. No on-chain tx is built — the buyer authorizes off-chain and
+ * the facilitator's gas wallet submits the actual transfer.
+ */
+export const EvmSignTypedDataSchema = z.object({
+    action: z.literal("sign-typed-data").describe("Sign an EIP-712 typed-data message (e.g. x402 EIP-3009 TransferWithAuthorization)"),
+    privateKey: PrivateKeyHex,
+    domain: z.record(z.string(), z.unknown()).describe("EIP-712 domain (name, version, chainId, verifyingContract) — from the /authorize signingPayload"),
+    types: z.record(z.string(), z.array(z.object({ name: z.string(), type: z.string() })))
+        .describe("EIP-712 type definitions (e.g. { TransferWithAuthorization: [...] }); the EIP712Domain entry is added automatically, do NOT include it"),
+    primaryType: z.string().min(1).describe("The primary type to sign (e.g. TransferWithAuthorization)"),
+    message: z.record(z.string(), z.unknown()).describe("The typed-data message values — from the /authorize signingPayload"),
+});
+
 export const EvmSignToolSchema = z.discriminatedUnion("action", [
     EvmSignUnsignedHexSchema,
     EvmSignFromDetailsSchema,
+    EvmSignTypedDataSchema,
 ]);
 
 export type EvmSignToolInput = z.infer<typeof EvmSignToolSchema>;
 export type EvmSignUnsignedHexInput = z.infer<typeof EvmSignUnsignedHexSchema>;
 export type EvmSignFromDetailsInput = z.infer<typeof EvmSignFromDetailsSchema>;
+export type EvmSignTypedDataInput = z.infer<typeof EvmSignTypedDataSchema>;
 

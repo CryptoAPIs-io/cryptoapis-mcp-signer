@@ -1,5 +1,19 @@
 # @cryptoapis-io/mcp-signer
 
+## 0.4.0
+
+### Minor Changes
+
+- x402 signing paths + UTXO all-6-chains + single-source signing cores.
+
+  - New `kaspa_sign` tool (schnorr via kaspa-wasm, mainnet).
+  - `evm_sign` adds EIP-712 typed-data signing (the x402 gasless / EIP-3009 TransferWithAuthorization path).
+  - `svm_sign` partial-signs the x402 SVM transaction (buyer signs, facilitator sponsors the fee).
+  - `xrp_sign` covers native XRP + IOU stablecoins; `tron_sign` returns the structured TronWeb signed-tx.
+  - `utxo_sign` works across all six UTXO chains (legacy raw-sign BTC/LTC/DOGE/DASH, BCH FORKID, Zcash Sapling).
+  - The signing cores now live in `@cryptoapis-io/offline-signer` (imported per-chain); mcp-signer keeps only
+    the MCP tool wrappers, eliminating the duplicated crypto the two repos previously kept in sync by hand.
+
 ## 0.3.0
 
 ### Minor Changes

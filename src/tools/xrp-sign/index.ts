@@ -1,36 +1,11 @@
-import type {
-    XrpSignFromDetailsInput,
-    XrpSignToolInput,
-    XrpSignUnsignedHexInput,
-} from "./schema.js";
+// XRP signing logic lives in @cryptoapis-io/offline-signer (single source of truth for the
+// crypto). This file is now ONLY the MCP tool wrapper; the sign functions are imported + re-exported.
+import { xrpSignFromDetails, xrpSignUnsignedHex } from "@cryptoapis-io/offline-signer/xrp";
+import type { XrpSignToolInput } from "./schema.js";
 import { XrpSignToolSchema } from "./schema.js";
 import type { McpSignerToolDef } from "../types.js";
 
-async function xrpSignFromDetails(
-    input: XrpSignFromDetailsInput
-): Promise<{ signedTransactionHex: string; signedTransactionHash: string }> {
-    const { Wallet } = await import("xrpl");
-    const wallet = Wallet.fromSeed(input.secret);
-    const signed = wallet.sign(input.transaction as Parameters<typeof wallet.sign>[0]);
-    return {
-        signedTransactionHex: signed.tx_blob,
-        signedTransactionHash: signed.hash,
-    };
-}
-
-async function xrpSignUnsignedHex(
-    input: XrpSignUnsignedHexInput
-): Promise<{ signedTransactionHex: string; signedTransactionHash: string }> {
-    const xrpl = await import("xrpl");
-    const hex = input.unsignedTransactionHex.startsWith("0x") ? input.unsignedTransactionHex.slice(2) : input.unsignedTransactionHex;
-    const txObj = xrpl.decode(hex) as Parameters<InstanceType<typeof xrpl.Wallet>["sign"]>[0];
-    const wallet = xrpl.Wallet.fromSeed(input.secret);
-    const signed = wallet.sign(txObj);
-    return {
-        signedTransactionHex: signed.tx_blob,
-        signedTransactionHash: signed.hash,
-    };
-}
+export { xrpSignFromDetails, xrpSignUnsignedHex };
 
 export const xrpSignTool: McpSignerToolDef<typeof XrpSignToolSchema> = {
     name: "xrp_sign",
@@ -45,4 +20,3 @@ export const xrpSignTool: McpSignerToolDef<typeof XrpSignToolSchema> = {
         return { content: [{ type: "text", text: JSON.stringify(result) }] };
     },
 };
-

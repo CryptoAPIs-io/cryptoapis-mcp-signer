@@ -2,7 +2,7 @@ import type { SupportedChainsResource } from "@cryptoapis-io/mcp-shared";
 
 /**
  * Supported blockchains, networks, and actions for the signer package.
- * Signer supports local-only signing for EVM, UTXO, Tron, and XRP chains.
+ * Signer supports local-only signing for EVM, UTXO, Tron, XRP, Kaspa, and Solana chains.
  */
 export const supportedChains: SupportedChainsResource = {
     evm: {
@@ -79,6 +79,24 @@ export const supportedChains: SupportedChainsResource = {
         },
         actions: {
             sign: ["xrp"],
+        },
+    },
+    kaspa: {
+        blockchains: ["kaspa"],
+        networks: {
+            kaspa: ["mainnet"],
+        },
+        actions: {
+            sign: ["kaspa"],
+        },
+    },
+    svm: {
+        blockchains: ["solana"],
+        networks: {
+            solana: ["mainnet", "devnet"],
+        },
+        actions: {
+            sign: ["solana"],
         },
     },
 };
