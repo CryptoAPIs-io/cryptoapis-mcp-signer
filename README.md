@@ -1,6 +1,6 @@
 # @cryptoapis-io/mcp-signer
 
-MCP server for **local transaction signing** across EVM, UTXO, Tron, and XRP blockchains. No Crypto APIs HTTP calls — signing happens entirely on your machine. No API key required.
+MCP server for **local transaction signing** across EVM, UTXO, Tron, XRP, Kaspa, Solana and Tezos. No Crypto APIs HTTP calls — signing happens entirely on your machine. No API key required.
 
 ## Security
 
@@ -113,6 +113,14 @@ Partial-sign a Solana (SVM) x402 payment transaction — the buyer's source-auth
 | Action | Description |
 |--------|-------------|
 | `partial-sign` | Deserialize the base64 unsigned TransferChecked tx from the x402 buyer `/authorize` (scheme `svm-transaction`), add the buyer signature, re-serialize to base64. Returns `{ transaction }`. |
+
+### `tezos_sign`
+
+Sign a Tezos operation for tz1 (ed25519), tz2 (secp256k1) or tz3 (P-256) keys (`edsk…` / `spsk…` / `p2sk…`).
+
+| Action | Description |
+|--------|-------------|
+| `sign-forged-operation` | Sign the `forgedOperation` hex from `prepare_transactions_tezos`. The operation is decoded first: only reveal/transaction ops from the key's own address are signed, and the optional `expected` (`destination`, `amount` in mutez, `maxFee`) must match. Returns `{ signedOperation, operationHash, signature, … }`; broadcast `signedOperation`. |
 
 Most tools return `signedTransactionHex` — ready to broadcast with `@cryptoapis-io/mcp-broadcast`. The
 x402 paths return `{ signature }` (EVM typed-data) or `{ transaction }` (SVM) instead.

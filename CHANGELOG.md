@@ -1,5 +1,11 @@
 # @cryptoapis-io/mcp-signer
 
+## 0.5.0
+
+### Minor Changes
+
+- 1b45318: New `tezos_sign` tool: sign a Tezos operation (the `forgedOperation` from `prepare_transactions_tezos`) for tz1 (ed25519), tz2 (secp256k1) and tz3 (P-256) keys. The operation is decoded before signing and refused unless it contains only reveal/transaction ops from the key's own address and matches the optional `expected` destination, amount and fee cap. Built on `@cryptoapis-io/offline-signer` 0.2.0.
+
 ## 0.4.1
 
 ### Patch Changes
