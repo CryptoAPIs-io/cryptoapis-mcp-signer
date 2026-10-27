@@ -1,6 +1,6 @@
 {
   "name": "@cryptoapis-io/mcp-signer",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "MCP server for local transaction signing on EVM, UTXO, Tron, and XRP — no API calls needed",
   "license": "MIT",
   "author": "Crypto APIs, Inc.",
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@cryptoapis-io/mcp-shared": "0.4.0",
-    "@cryptoapis-io/offline-signer": "^0.2.0",
+    "@cryptoapis-io/offline-signer": "^0.3.0",
     "@modelcontextprotocol/sdk": "^1.27.1",
     "zod": "^3.25.0"
   },
@@ -45,7 +45,7 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "node -e \"console.log('lint: add eslint if you want')\"",
-    "test": "node -e \"console.log('test: add later')\"",
+    "test": "node --test test/*.test.mjs",
     "test:sepolia-sign": "tsx scripts/test-sepolia-sign.ts",
     "clean": "rimraf dist",
     "test:utxo-sign": "tsx scripts/test-utxo-sign.ts",

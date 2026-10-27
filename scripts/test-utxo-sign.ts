@@ -1,12 +1,13 @@
 /**
  * WRAPPER SMOKE TEST: drive the real `utxoSignTool.handler` `sign-from-details` for the
- * bitcoinjs-compatible UTXO chains (bitcoin, litecoin, dogecoin, dash) and confirm each
- * produces a valid signed tx — i.e. the MCP tool wrapper correctly delegates to
- * @cryptoapis-io/offline-signer. The signing CORES (all 6 chains, incl. BCH FORKID + Zcash
- * Sapling) are tested exhaustively in offline-signer's own `npm run test:utxo`; this test
- * deliberately does NOT re-load bitcore-lib-cash / zcashcore here — importing them directly
- * alongside offline-signer's copy trips bitcore's "more than one instance" runtime guard, so
- * BCH + Zcash wrapper coverage is delegated to offline-signer + the x402 UTXO round-trip test.
+ * bitcoinjs-compatible UTXO chains (bitcoin, litecoin, dogecoin, dash) plus zcash (which needs
+ * a `targetHeight` to resolve its v5 consensus branch ID) and confirm each produces a valid
+ * signed tx — i.e. the MCP tool wrapper correctly delegates to @cryptoapis-io/offline-signer.
+ * The signing CORES (all 6 chains, incl. BCH FORKID + Zcash v5) are tested exhaustively in
+ * offline-signer's own `npm run test:utxo`; this test deliberately does NOT re-load
+ * bitcore-lib-cash here — importing it directly alongside offline-signer's copy trips bitcore's
+ * "more than one instance" runtime guard, so BCH wrapper coverage is delegated to offline-signer
+ * + the x402 UTXO round-trip test.
  * Run: pnpm --filter @cryptoapis-io/mcp-signer exec tsx scripts/test-utxo-sign.ts
  */
 
@@ -24,11 +25,22 @@ const CHAINS = [
     { blockchain: "litecoin", network: "testnet" },
     { blockchain: "dogecoin", network: "testnet" },
     { blockchain: "dash", network: "testnet" },
+    // Zcash testnet NU7 activation height (chain tip + 1 would be the real value at broadcast time).
+    { blockchain: "zcash", network: "testnet", targetHeight: 4465026 },
 ] as const;
 
 /** Build a P2PKH prepared tx (1-in, 2-out) + WIF for a bitcoinjs-compatible chain. */
 function buildPrepared(blockchain: string, network: string): { prepared: Record<string, unknown>; wif: string } {
-    const net = getNetworkForUtxo(blockchain as never, network as never) as bitcoin.Network;
+    // Zcash's real pubKeyHash/scriptHash prefixes (e.g. mainnet 0x1cb8) don't fit ECPair's
+    // byte-sized network validation. Its WIF byte (0x80/0xef) matches bitcoinjs' own
+    // mainnet/testnet networks though, and a P2PKH script doesn't encode the network at all —
+    // so bitcoin's own networks are used here to generate the key + script for zcash too.
+    const net =
+        blockchain === "zcash"
+            ? network === "mainnet"
+                ? bitcoin.networks.bitcoin
+                : bitcoin.networks.testnet
+            : (getNetworkForUtxo(blockchain as never, network as never) as bitcoin.Network);
     const keyPair = ECPair.makeRandom({ network: net });
     const { output } = bitcoin.payments.p2pkh({ pubkey: Buffer.from(keyPair.publicKey), network: net });
     return {
@@ -53,7 +65,7 @@ function prepared(scriptHex: string): Record<string, unknown> {
 }
 
 /** Sign one chain and report. */
-async function tryChain(blockchain: string, network: string): Promise<void> {
+async function tryChain(blockchain: string, network: string, targetHeight?: number): Promise<void> {
     try {
         const { prepared: prep, wif } = buildPrepared(blockchain, network);
         const res = await utxoSignTool.handler({
@@ -62,6 +74,7 @@ async function tryChain(blockchain: string, network: string): Promise<void> {
             network,
             privateKeys: [wif],
             preparedTransaction: prep,
+            ...(targetHeight != null ? { targetHeight } : {}),
         } as never);
         const text = (res as { content: Array<{ text: string }> }).content[0]!.text;
         const hex = JSON.parse(text).signedTransactionHex as string;
@@ -76,7 +89,7 @@ async function tryChain(blockchain: string, network: string): Promise<void> {
                 detail = `hex ${hex.length} (non-bitcoinjs format)`;
             }
         } else {
-            detail = `hex ${hex.length} (Sapling)`;
+            detail = `hex ${hex.length} (v5)`;
         }
         // eslint-disable-next-line no-console
         console.log(`  ${blockchain.padEnd(14)} ✅ signed  (${detail})`);
@@ -91,7 +104,7 @@ async function main(): Promise<void> {
     console.log("utxo-sign sign-from-details per chain (P2PKH, 1-in 2-out), via real handler:");
     for (const c of CHAINS) {
         // eslint-disable-next-line no-await-in-loop
-        await tryChain(c.blockchain, c.network);
+        await tryChain(c.blockchain, c.network, "targetHeight" in c ? c.targetHeight : undefined);
     }
 }
 

@@ -76,8 +76,8 @@ Sign a UTXO transaction (Bitcoin, Bitcoin Cash, Litecoin, Dogecoin, Dash, Zcash)
 
 | Action | Description |
 |--------|-------------|
-| `sign-from-details` | Sign from a prepared transaction object (inputs, outputs) |
-| `sign-unsigned-hex` | Sign a raw unsigned transaction hex with input descriptors |
+| `sign-from-details` | Sign from a prepared transaction object (inputs, outputs). For zcash, produces a v5 (ZIP 225/244) transaction and requires exactly one of `targetHeight` (current chain tip + 1) or `consensusBranchId` (e.g. a node's `getblockchaininfo` `consensus.nextblock`) |
+| `sign-unsigned-hex` | Sign a raw unsigned transaction hex with input descriptors. Does not support zcash |
 
 ### `tron_sign`
 

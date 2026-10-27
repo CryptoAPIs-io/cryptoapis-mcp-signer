@@ -19,6 +19,23 @@ export const UtxoSignFromDetailsSchema = z.object({
     network: UtxoNetworkSchema.describe("Network (mainnet or testnet)"),
     privateKeys: z.array(WifKey).min(1).describe("Array of WIF private keys, one per input (same order as prepared tx inputs)"),
     preparedTransaction: z.record(z.unknown()).describe("Prepared transaction object (data.item from prepare-transaction API)"),
+    targetHeight: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe(
+            "Zcash only; exactly one of targetHeight or consensusBranchId is required for zcash (rejected for any other blockchain). The block height the transaction will be mined in = current chain tip + 1 (e.g. GET /blocks/utxo/zcash/{network}/latest height + 1).",
+        ),
+    consensusBranchId: z
+        .number()
+        .int()
+        .min(0)
+        .max(0xffffffff)
+        .optional()
+        .describe(
+            "Zcash only; exactly one of targetHeight or consensusBranchId is required for zcash (rejected for any other blockchain). The consensus branch ID (uint32) itself, e.g. a node's getblockchaininfo consensus.nextblock.",
+        ),
 });
 
 /** Sign from raw unsigned transaction hex (inputs metadata required for signing). */

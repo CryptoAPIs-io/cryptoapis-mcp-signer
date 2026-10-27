@@ -1,5 +1,11 @@
 # @cryptoapis-io/mcp-signer
 
+## 0.6.0
+
+### Minor Changes
+
+- Bump `@cryptoapis-io/offline-signer` to ^0.3.0 and add `targetHeight`/`consensusBranchId` to `utxo_sign`'s `sign-from-details` action, required for zcash to sign a NU7-correct v5 (ZIP 225/244) transaction with the right consensus branch ID.
+
 ## 0.5.0
 
 ### Minor Changes
