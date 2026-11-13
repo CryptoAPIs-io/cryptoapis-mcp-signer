@@ -1,5 +1,12 @@
 # @cryptoapis-io/mcp-signer
 
+## 0.6.1
+
+### Patch Changes
+
+- Updated dependencies [59200e2]
+  - @cryptoapis-io/mcp-shared@0.5.0
+
 ## 0.6.0
 
 ### Minor Changes
